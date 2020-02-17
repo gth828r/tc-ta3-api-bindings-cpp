@@ -1,0 +1,23 @@
+#!/bin/sh
+
+pecho() { printf %s\\n "$*"; }
+log() { pecho "$@"; }
+error() { log "ERROR: $@" >&2; }
+fatal() { error "$@"; exit 1; }
+try() { "$@" || fatal "'$@' failed"; }
+
+[ -n "${SSH_PRIVATE_KEY}" ] || fatal "SSH_PRIVATE_KEY is not set"
+
+# set up ssh
+try cat <<EOF >~/.ssh/id_rsa || exit 1
+${SSH_PRIVATE_KEY}
+EOF
+try chmod -R go-rwx ~/.ssh/id_rsa
+
+CWD=$(pwd)
+try git clone git@git.tc.bbn.com:bbn/ta3-serialization-schema.git
+try cd ta3-serialization-schema
+try mvn clean exec:java
+try mvn install
+try mvn compile -Pcpp
+try cd $CWD

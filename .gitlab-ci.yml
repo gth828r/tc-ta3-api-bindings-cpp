@@ -1,0 +1,11 @@
+test:
+  image: docker.tc.bbn.com/ta3-base-image
+  script: |
+    ./ci/schema-setup || exit 1
+    ./autogen.sh || exit 1
+    mkdir -p build || exit 1
+    cd build || exit 1
+    ../configure || exit 1
+    make check || exit 1
+  tags:
+  - docker

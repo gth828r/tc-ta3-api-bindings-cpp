@@ -1,0 +1,16 @@
+This example file is a first attempt at showing how to use a few new features:
+ * Fetching a key and a message using the getNextMessageWithKey API call
+ * Creating a consumer that seeks to a specific offset
+   * Positive offsets are absolute indices, meaning that even if the first
+     valid index in the current TopicPartition is non-zero, the provided value
+     will be used relative to zero.
+   * Negative offsets are relative indices to the last valid offset in the
+     Kafka TopicPartition.
+
+The example assumes that it is consuming from the default C++ bindings topic
+CPPTest, and it basically uses all defaults except for group ID, which is
+randomly generated each time.  Something must have filled in data for this
+topic prior to running this script for anything useful to happen.
+
+The example tests fetching messages with and without keys, and it also tests
+consumers which are provided with both positive and negative offsets.
